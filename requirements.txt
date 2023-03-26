@@ -1,0 +1,15 @@
+# --index-url https://download.pytorch.org/whl/cu117 based on the cuda requirements
+git+https://github.com/hassony2/torch_videovision
+gdown
+matplotlib
+numpy
+opencv-python
+pandas
+scikit-learn
+seaborn
+tensorboard
+torch
+torchaudio
+torchvision
+torchsummary
+tqdm

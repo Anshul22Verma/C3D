@@ -114,6 +114,7 @@ def train(model: torch.nn.Module, root_loc: str, n_epochs: int = 100, board_loc:
                           img_path=os.path.join(val_cms_loc, f"epoch_{epoch + 1}.png"))
 
         if best_val_acc is None:
+            torch.save(model.state_dict(), os.path.join(board_loc, model_name))
             best_epoch = epoch
             best_val_acc = val_acc
             best_train_acc = train_acc

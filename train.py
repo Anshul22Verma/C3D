@@ -73,11 +73,11 @@ def validate_one_epoch(epoch: int, model: torch.nn.Module, loader: DataLoader,
 def train(model: torch.nn.Module, root_loc: str, n_epochs: int = 100, board_loc: str = "C3D",
           model_name: str = "C3D.pth", lr: float = None, oversample: bool = False):
     os.makedirs(os.path.join(os.path.dirname(root_loc), "runs"), exist_ok=True)
-    writer = SummaryWriter(os.path.join(os.path.dirname(root_loc), "runs", board_loc))
-    train_cms_loc = os.path.join(os.path.dirname(root_loc), "runs", board_loc, "trainCM")
-    os.makedirs(os.path.join(os.path.dirname(root_loc), "runs", board_loc, "trainCM"), exist_ok=True)
-    val_cms_loc = os.path.join(os.path.dirname(root_loc), "runs", board_loc, "valCM")
-    os.makedirs(os.path.join(os.path.dirname(root_loc), "runs", board_loc, "valCM"), exist_ok=True)
+    writer = SummaryWriter(board_loc)
+    train_cms_loc = os.path.join(board_loc, "trainCM")
+    os.makedirs(os.path.join(board_loc, "trainCM"), exist_ok=True)
+    val_cms_loc = os.path.join(board_loc, "valCM")
+    os.makedirs(os.path.join(board_loc, "valCM"), exist_ok=True)
 
     train_df, val_df, test_df, class_encodings = prep_splits(root_loc=root_loc)
     train_loader, val_loader, test_loader = get_data_loaders(train_df=train_df, val_df=val_df, test_df=test_df,
@@ -118,7 +118,7 @@ def train(model: torch.nn.Module, root_loc: str, n_epochs: int = 100, board_loc:
             best_val_acc = val_acc
             best_train_acc = train_acc
         elif val_acc > best_val_acc:
-            torch.save(model.state_dict(), os.path.join(os.path.dirname(root_loc), "runs", board_loc, model_name))
+            torch.save(model.state_dict(), os.path.join(board_loc, model_name))
             best_epoch = epoch
             best_val_acc = val_acc
             best_train_acc = train_acc
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     train(model=model, root_loc=root_loc, n_epochs=n_epochs, board_loc=board_loc,
           model_name=model_name, oversample=oversample, lr=1e-2)
 
-    model.load_state_dict(torch.load(os.path.join(os.path.dirname(root_loc), "runs", board_loc, model_name)))
+    model.load_state_dict(torch.load(os.path.join(board_loc, model_name)))
     _, _, test_loader = get_data_loaders(train_df=train_dummy, val_df=valid_dummy, test_df=test_df,
                                          encodings=class_encodings, with_train_over_sampling=False)
     classes = list(class_encodings.values())
